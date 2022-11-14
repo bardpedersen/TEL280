@@ -12,6 +12,9 @@ class Squared(object):
         self.free = True
         self.goal = False
         self.start = False
+        self.G = 0
+        self.H = 0
+        self.F = self.G + self.H
 
     def check_box(self, image):
         for k in np.arange(self.x_start, self.x_stop, 1):
@@ -34,8 +37,8 @@ class Squared(object):
 
 if __name__ == '__main__':
 
+    #%% Initialising
     im = skimage.io.imread('Assignment5_tel280.png')
-
     xstart = x__start = 0
     xstop = x__stop = 1169
     ystart = 0
@@ -63,6 +66,9 @@ if __name__ == '__main__':
 
     for element, node in enumerate(list_of_nodes):
         node.check_box(im)
+
+    #%% A* mapping
+
 
     plt.imshow(im)
     plt.show()
