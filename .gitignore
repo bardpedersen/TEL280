@@ -616,3 +616,4 @@ $RECYCLE.BIN/
 data/
 examples/data
 /examples/results/
+.DS_Store
