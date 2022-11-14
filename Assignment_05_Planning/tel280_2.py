@@ -1,6 +1,8 @@
 import skimage
 import matplotlib.pyplot as plt
 import numpy as np
+
+
 class Squared(object):
     def __init__(self, x_start, x_stop, y_start, y_stop):
         self.x_start = x_start
@@ -13,18 +15,21 @@ class Squared(object):
 
     def check_box(self, image):
         for k in np.arange(self.x_start, self.x_stop, 1):
-            for l in np.arange(self.y_start, self.y_stop, 1):
-                if image[int(l), int(k), 0] > 200 and image[int(l), int(k), 1] < 1 and image[int(l), int(k), 2] < 1:
+            for o in np.arange(self.y_start, self.y_stop, 1):
+                red = image[int(o), int(k), 0]
+                green = image[int(o), int(k), 1]
+                blue = image[int(o), int(k), 2]
+                if red > 200 and green < 1 and blue < 1:
                     self.free = False
-                    break;
+                    break
 
-                elif 100 < image[int(l), int(k), 1] > 200 and image[int(l), int(k), 0] < 200 and image[int(l), int(k), 2] < 200:
+                elif 100 < green > 200 and red < 200 and blue < 200:
                     self.goal = True
-                    break;
+                    break
 
-                elif image[int(l), int(k), 2] > 200 and image[int(l), int(k), 0] < 200 and image[int(l), int(k), 1] < 200:
+                elif blue > 200 and red < 200 and green < 200:
                     self.start = True
-                    break;
+                    break
 
 
 if __name__ == '__main__':
@@ -55,7 +60,6 @@ if __name__ == '__main__':
             im[int(y__start):int(y__stop), int(x__stop)] = 0
             im[int(y__start), int(x__start):int(x__stop)] = 0
             im[int(y__start), int(x__stop):int(x__stop)] = 0
-
 
     for element, node in enumerate(list_of_nodes):
         node.check_box(im)
