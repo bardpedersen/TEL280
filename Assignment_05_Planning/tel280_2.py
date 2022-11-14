@@ -11,12 +11,27 @@ class Squared:
         self.y_start = y_start
         self.y_stop = y_stop
         self.free = False
+        self.goal = False
+        self.start = False
 
     def check_for_collision(self):
         for k in range(int(self.x_start), int(self.x_stop)):
             for l in range(int(self.y_start), int(self.y_stop)):
-                if image[k][l][2] > 200:
+                if image[k][l][0] > 200:
                     self.free = True
+        pass
+
+    def check_for_goal(self):
+        for k in range(int(self.x_start), int(self.x_stop)):
+            for l in range(int(self.y_start), int(self.y_stop)):
+                if image[k][l][1] > 200:
+                    self.goal = True
+        pass
+    def check_for_start(self):
+        for k in range(int(self.x_start), int(self.x_stop)):
+            for l in range(int(self.y_start), int(self.y_stop)):
+                if image[k][l][3] > 200:
+                    self.start = True
         pass
 
 
@@ -25,9 +40,9 @@ xstop = x__stop = 1169
 ystart = 0
 ystop = y__stop = 797
 grid_sizex = 0
-stepx = (xstop-xstart)/21
+stepx = (xstop-xstart)/22
 grid_sizey = 0
-stepy = (ystop-ystart)/14
+stepy = (ystop-ystart)/15
 x__stop = x__start + stepx
 for i in range(21):
     x__start += stepx
