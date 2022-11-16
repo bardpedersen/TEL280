@@ -29,7 +29,7 @@ class Squared(object):
                     self.free = False
                     break
 
-                elif 100 < green > 200 and red < 200 and blue < 200:
+                elif green > 200 and red < 200 and blue < 200:
                     self.goal = True
                     break
 
@@ -40,7 +40,7 @@ class Squared(object):
 
 if __name__ == '__main__':
 
-    #%% Initialising
+    # %% Initialising
 
     im = skimage.io.imread('Assignment5_tel280.png')
     xstart = x__start = 0
@@ -51,9 +51,9 @@ if __name__ == '__main__':
     stepx = (xstop-xstart)/22
     grid_sizey = 0
     stepy = (ystop-ystart)/15
-    x__stop = x__start + stepx
 
     list_of_nodes = []
+    x__stop = x__start + stepx
     for i in range(21):
         x__start += stepx
         x__stop += stepx
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     for element, node in enumerate(list_of_nodes):
         node.check_box(im)
 
-    #%% A* mapping
+    # %% A* mapping
 
     open_list = []
     closed_list = []
@@ -83,66 +83,102 @@ if __name__ == '__main__':
     for i in range(len(list_of_nodes)):
         if list_of_nodes[i].goal:
             goal_square = list_of_nodes[i]
+
     run = True
     while run:
         open_list.sort(key=lambda x: x.F)
         q = open_list[0]
-        print(q.x, q.y)
-        print("\n")
 
-        #find succesor
-        succesor = []
+        # find neighbour_cell
+        neighbour_cell = []
         for i in range(len(list_of_nodes)):
-            if list_of_nodes[i].y == q.y - 1 and list_of_nodes[i].x == q.x and list_of_nodes[i].free:
+            if list_of_nodes[i].y == q.y - 1 \
+                    and list_of_nodes[i].x == q.x \
+                    and list_of_nodes[i].free:
                 upper = list_of_nodes[i]
-            elif list_of_nodes[i].y == q.y - 1 and list_of_nodes[i].x == q.x + 1 and list_of_nodes[i].free:
+
+            elif list_of_nodes[i].y == q.y - 1 \
+                    and list_of_nodes[i].x == q.x + 1 \
+                    and list_of_nodes[i].free:
                 upper_right = list_of_nodes[i]
-            elif list_of_nodes[i].x == q.x + 1 and list_of_nodes[i].y == q.y and list_of_nodes[i].free:
+
+            elif list_of_nodes[i].x == q.x + 1 \
+                    and list_of_nodes[i].y == q.y \
+                    and list_of_nodes[i].free:
                 right = list_of_nodes[i]
-            elif list_of_nodes[i].x == q.x + 1 and list_of_nodes[i].y == q.y + 1 and list_of_nodes[i].free:
+
+            elif list_of_nodes[i].x == q.x + 1 \
+                    and list_of_nodes[i].y == q.y + 1 \
+                    and list_of_nodes[i].free:
                 lower_right = list_of_nodes[i]
-            elif list_of_nodes[i].y == q.y + 1 and list_of_nodes[i].x == q.x and list_of_nodes[i].free:
+
+            elif list_of_nodes[i].y == q.y + 1 \
+                    and list_of_nodes[i].x == q.x \
+                    and list_of_nodes[i].free:
                 lower = list_of_nodes[i]
-            elif list_of_nodes[i].y == q.y + 1 and list_of_nodes[i].x == q.x - 1 and list_of_nodes[i].free:
+
+            elif list_of_nodes[i].y == q.y + 1 \
+                    and list_of_nodes[i].x == q.x - 1 \
+                    and list_of_nodes[i].free:
                 lower_left = list_of_nodes[i]
-            elif list_of_nodes[i].x == q.x - 1 and list_of_nodes[i].y == q.y and list_of_nodes[i].free:
+
+            elif list_of_nodes[i].x == q.x - 1 \
+                    and list_of_nodes[i].y == q.y \
+                    and list_of_nodes[i].free:
                 left = list_of_nodes[i]
-            elif list_of_nodes[i].x == q.x - 1 and list_of_nodes[i].y == q.y - 1 and list_of_nodes[i].free:
+
+            elif list_of_nodes[i].x == q.x - 1 \
+                    and list_of_nodes[i].y == q.y - 1 \
+                    and list_of_nodes[i].free:
                 upper_left = list_of_nodes[i]
 
-        succesor = [upper, upper_left, left, lower_left, lower, lower_right, right, upper_right]
+        neighbour_cell = [upper, upper_left, left, lower_left,
+                          lower, lower_right, right, upper_right]
 
-        for i in range(len(succesor)):
+        for i in range(len(neighbour_cell)):
 
-            dx = abs(goal_square.x - succesor[i].x)
-            dy = abs(goal_square.y - succesor[i].y)
-            succesor[i].H = (dx + dy) + (np.sqrt(2) - 2) * min(dx, dy)
+            dx = abs(goal_square.x - neighbour_cell[i].x)
+            dy = abs(goal_square.y - neighbour_cell[i].y)
+            neighbour_cell[i].H = (dx + dy) + (np.sqrt(2) - 2) * min(dx, dy)
 
-            dx = abs(start_square.x - succesor[i].x)
-            dy = abs(start_square.y - succesor[i].y)
-            succesor[i].G = (dx + dy) + (np.sqrt(2) - 2) * min(dx, dy)
+            dx = abs(start_square.x - neighbour_cell[i].x)
+            dy = abs(start_square.y - neighbour_cell[i].y)
+            neighbour_cell[i].G = (dx + dy) + (np.sqrt(2) - 2) * min(dx, dy)
 
-            succesor[i].F = succesor[i].G + succesor[i].H
-            if succesor[i].parent is None:
-                succesor[i].parent = q
+            neighbour_cell[i].F = neighbour_cell[i].G + neighbour_cell[i].H
+            if neighbour_cell[i].parent is None:
+                neighbour_cell[i].parent = q
 
         temp = []
         not_add = []
-        for i in range(len(succesor)):
+        for i in range(len(neighbour_cell)):
             for j in range(len(open_list)):
-                "if a node with the same position as successor is in the OPEN list which has a lower f than successor, skip this successor"
-                if (succesor[i].y == open_list[j].y and succesor[i].x == open_list[j].x and succesor[i].F >= open_list[j].F):
-                    not_add.append(succesor[i])
-                elif (succesor[i].y == open_list[j].y and succesor[i].x == open_list[j].x and succesor[i].F < open_list[j].F):
+                """if a node with the same position as successor is in the OPEN list which 
+                has a lower f than successor, skip this successor"""
+                if (neighbour_cell[i].y == open_list[j].y
+                        and neighbour_cell[i].x == open_list[j].x
+                        and neighbour_cell[i].F >= open_list[j].F):
+                    not_add.append(neighbour_cell[i])
+
+                elif (neighbour_cell[i].y == open_list[j].y
+                      and neighbour_cell[i].x == open_list[j].x
+                      and neighbour_cell[i].F < open_list[j].F):
                     open_list.remove(open_list[j])
+
             for j in range(len(closed_list)):
-                "if a node with the same position as successor  is in the CLOSED list which has a lower f than successor, skip this successor"
-                if (succesor[i].y == closed_list[j].y and succesor[i].x == closed_list[j].x and succesor[i].F >= closed_list[j].F):
-                    not_add.append(succesor[i])
-                elif (succesor[i].y == closed_list[j].y and succesor[i].x == closed_list[j].x and succesor[i].F < closed_list[j].F):
+                """if a node with the same position as successor  is in the CLOSED list which
+                has a lower f than successor, skip this successor"""
+                if (neighbour_cell[i].y == closed_list[j].y
+                        and neighbour_cell[i].x == closed_list[j].x
+                        and neighbour_cell[i].F >= closed_list[j].F):
+                    not_add.append(neighbour_cell[i])
+
+                elif (neighbour_cell[i].y == closed_list[j].y
+                      and neighbour_cell[i].x == closed_list[j].x
+                      and neighbour_cell[i].F < closed_list[j].F):
                     open_list.remove(closed_list[j])
 
-            temp.append(succesor[i])
+            temp.append(neighbour_cell[i])
 
         for i in range(len(not_add)):
             temp.remove(not_add[i])
@@ -153,17 +189,18 @@ if __name__ == '__main__':
         open_list.remove(q)
         closed_list.append(q)
 
-        for i in range(len(succesor)):
-            if succesor[i].goal:
-                closed_list.append(succesor[i])
+        for i in range(len(neighbour_cell)):
+            if neighbour_cell[i].goal:
+                closed_list.append(neighbour_cell[i])
                 run = False
 
+    plt.imshow(im)
+    plt.show()
 
     def callback(cell, start_squar, parentlist):
         if start_squar.x == cell.x and start_squar.y == cell.y:
             return parentlist
         parent = cell.parent
-        print(cell.x, cell.y, parent.x, parent.y)
         im[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop)] = 0
         parentlist.append(parent)
         callback(parent, start_squar, parentlist)
@@ -172,8 +209,6 @@ if __name__ == '__main__':
     closed_list.reverse()
     parentliste = []
     ans = callback(goal_square, start_square, parentliste)
-
-
 
     plt.imshow(im)
     plt.show()
