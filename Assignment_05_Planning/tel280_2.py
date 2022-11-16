@@ -127,7 +127,7 @@ if __name__ == '__main__':
         for i in range(len(succesor)):
             if succesor[i].goal:
                 run = False
-
+        """ Bug here"""
         temp = []
         for i in range(len(succesor)):
             for j in range(len(open_list)):
