@@ -17,6 +17,7 @@ class Squared(object):
         self.G = 0
         self.H = 0
         self.F = self.G + self.H
+        self.parent = None
 
     def check_box(self, image):
         for k in np.arange(self.x_start, self.x_stop, 1):
@@ -83,8 +84,7 @@ if __name__ == '__main__':
         if list_of_nodes[i].goal:
             goal_square = list_of_nodes[i]
     run = True
-    x=0
-    while x<4:
+    while run:
         open_list.sort(key=lambda x: x.F)
         q = open_list[0]
         print(q.x, q.y)
@@ -123,21 +123,29 @@ if __name__ == '__main__':
             succesor[i].G = (dx + dy) + (np.sqrt(2) - 2) * min(dx, dy)
 
             succesor[i].F = succesor[i].G + succesor[i].H
+            if succesor[i].parent is None:
+                succesor[i].parent = q
 
-        for i in range(len(succesor)):
-            if succesor[i].goal:
-                run = False
-        """ Bug here"""
         temp = []
+        not_add = []
         for i in range(len(succesor)):
             for j in range(len(open_list)):
                 "if a node with the same position as successor is in the OPEN list which has a lower f than successor, skip this successor"
-                if not (succesor[i].y == open_list[j].y and succesor[i].x == open_list[j].x and succesor[i].F < open_list[j].F):
-                    temp.append(succesor[i])
+                if (succesor[i].y == open_list[j].y and succesor[i].x == open_list[j].x and succesor[i].F >= open_list[j].F):
+                    not_add.append(succesor[i])
+                elif (succesor[i].y == open_list[j].y and succesor[i].x == open_list[j].x and succesor[i].F < open_list[j].F):
+                    open_list.remove(open_list[j])
             for j in range(len(closed_list)):
                 "if a node with the same position as successor  is in the CLOSED list which has a lower f than successor, skip this successor"
-                if not(succesor[i].y == closed_list[j].y and succesor[i].x == closed_list[j].x and succesor[i].F < closed_list[j].F):
-                    temp.append(succesor[i])
+                if (succesor[i].y == closed_list[j].y and succesor[i].x == closed_list[j].x and succesor[i].F >= closed_list[j].F):
+                    not_add.append(succesor[i])
+                elif (succesor[i].y == closed_list[j].y and succesor[i].x == closed_list[j].x and succesor[i].F < closed_list[j].F):
+                    open_list.remove(closed_list[j])
+
+            temp.append(succesor[i])
+
+        for i in range(len(not_add)):
+            temp.remove(not_add[i])
 
         for i in range(len(temp)):
             open_list.append(temp[i])
@@ -145,7 +153,27 @@ if __name__ == '__main__':
         open_list.remove(q)
         closed_list.append(q)
 
-        x += 1
+        for i in range(len(succesor)):
+            if succesor[i].goal:
+                closed_list.append(succesor[i])
+                run = False
+
+
+    def callback(cell, start_squar, parentlist):
+        if start_squar.x == cell.x and start_squar.y == cell.y:
+            return parentlist
+        parent = cell.parent
+        print(cell.x, cell.y, parent.x, parent.y)
+        im[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop)] = 0
+        parentlist.append(parent)
+        callback(parent, start_squar, parentlist)
+
+
+    closed_list.reverse()
+    parentliste = []
+    ans = callback(goal_square, start_square, parentliste)
+
+
 
     plt.imshow(im)
     plt.show()
