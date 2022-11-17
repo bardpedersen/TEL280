@@ -201,7 +201,9 @@ if __name__ == '__main__':
         if start_squar.x == cell.x and start_squar.y == cell.y:
             return parentlist
         parent = cell.parent
-        im[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop)] = 0
+        im[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop), 2] = 255
+        im[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop), 0] = 0
+        im[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop), 1] = 0
         parentlist.append(parent)
         callback(parent, start_squar, parentlist)
 
@@ -209,6 +211,6 @@ if __name__ == '__main__':
     closed_list.reverse()
     parentliste = []
     ans = callback(goal_square, start_square, parentliste)
-
+    print(ans)
     plt.imshow(im)
     plt.show()
