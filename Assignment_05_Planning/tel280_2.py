@@ -72,6 +72,9 @@ if __name__ == '__main__':
         node.check_box(im)
 
     # %% A* mapping
+    plt.imshow(im)
+    plt.show()
+    im2 = im
 
     open_list = []
     closed_list = []
@@ -139,13 +142,21 @@ if __name__ == '__main__':
 
             dx = abs(goal_square.x - neighbour_cell[i].x)
             dy = abs(goal_square.y - neighbour_cell[i].y)
-            neighbour_cell[i].H = (dx + dy) + (np.sqrt(2) - 2) * min(dx, dy)
+            neighbour_cell[i].H = (dx + dy)  # + (np.sqrt(2) - 2) * min(dx, dy)  # Only used for Diagonal distance
 
             dx = abs(start_square.x - neighbour_cell[i].x)
             dy = abs(start_square.y - neighbour_cell[i].y)
-            neighbour_cell[i].G = (dx + dy) + (np.sqrt(2) - 2) * min(dx, dy)
+            neighbour_cell[i].G = (dx + dy)  # + (np.sqrt(2) - 2) * min(dx, dy)  # Only used for Diagonal distance
 
             neighbour_cell[i].F = neighbour_cell[i].G + neighbour_cell[i].H
+
+            im[int(neighbour_cell[i].y_start):int(neighbour_cell[i].y_stop),
+            int(neighbour_cell[i].x_start):int(neighbour_cell[i].x_stop), 2] = 0
+            im[int(neighbour_cell[i].y_start):int(neighbour_cell[i].y_stop),
+            int(neighbour_cell[i].x_start):int(neighbour_cell[i].x_stop), 0] = 0
+            im[int(neighbour_cell[i].y_start):int(neighbour_cell[i].y_stop),
+            int(neighbour_cell[i].x_start):int(neighbour_cell[i].x_stop), 1] = 255
+
             if neighbour_cell[i].parent is None:
                 neighbour_cell[i].parent = q
 
@@ -197,20 +208,19 @@ if __name__ == '__main__':
     plt.imshow(im)
     plt.show()
 
-    def callback(cell, start_squar, parentlist):
+    def callback(cell, start_squar, parentlist, im2):
         if start_squar.x == cell.x and start_squar.y == cell.y:
             return parentlist
         parent = cell.parent
-        im[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop), 2] = 255
-        im[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop), 0] = 0
-        im[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop), 1] = 0
+        im2[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop), 2] = 255
+        im2[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop), 0] = 0
+        im2[int(cell.y_start):int(cell.y_stop), int(cell.x_start):int(cell.x_stop), 1] = 0
         parentlist.append(parent)
-        callback(parent, start_squar, parentlist)
+        callback(parent, start_squar, parentlist, im2)
 
 
     closed_list.reverse()
     parentliste = []
-    ans = callback(goal_square, start_square, parentliste)
-    print(ans)
-    plt.imshow(im)
+    ans = callback(goal_square, start_square, parentliste, im2)
+    plt.imshow(im2)
     plt.show()
