@@ -44,7 +44,7 @@ class GridCell(object):
 
 
 # Import image
-im = skimage.io.imread('Assignment5.png')
+im = skimage.io.imread('Assignment_5.png')
 
 # Defines boundaries to align grid with image
 xstart = x__start = 0
