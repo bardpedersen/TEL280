@@ -53,18 +53,25 @@ def main(shape_main, i):
         main(shape4, i)
 
 
-image = skimage.io.imread('Tel280.png', as_gray=True)
+# Import image
+image = skimage.io.imread('Assigment_4.png', as_gray=True)
+
+# Create a binary image, easier to work with.
 thresh = skimage.filters.threshold_otsu(image)
 binary = image > thresh
 df = pd.DataFrame(binary)
 shape_max = np.shape(image)
 
-shape_x_direction = (7, shape_max[0] - 9)  # To remove frame
+# Remove frame of image
+shape_x_direction = (7, shape_max[0] - 9)
 shape_y_direction = (6, shape_max[1] - 8)
 shape = (shape_x_direction, shape_y_direction, 0)
+
+# Defines the number of splits we want
 number_of_splits = 100
 
 main(shape, number_of_splits)
 
 plt.imshow(binary, cmap=plt.cm.gray)
 plt.show()
+plt.imsave('Assigment_4_results.png', binary)
