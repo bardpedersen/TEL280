@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     # %% Initialising
 
-    im = skimage.io.imread('Assignment5_tel280.png')
+    im = skimage.io.imread('Assignment5.png')
     xstart = x__start = 0
     xstop = x__stop = 1169
     ystart = 0
@@ -224,3 +224,4 @@ if __name__ == '__main__':
     ans = callback(goal_square, start_square, parentliste, im2)
     plt.imshow(im2)
     plt.show()
+    plt.imsave('Assigment_5_results.png', im2)
